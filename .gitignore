@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local tooling binaries
 /tools/
+
+# private developer notes
+/NOTES.md
