@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { supabase, supabaseAdmin, deleteImage } from "@/lib/supabase";
 import { revalidatePublicContent } from "@/lib/revalidate";
 
@@ -8,6 +9,11 @@ export async function GET(request: NextRequest) {
   const section   = searchParams.get("section");
   const featured  = searchParams.get("featured");
   const adminMode = searchParams.get("admin");
+
+  if (adminMode) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+  }
 
   let query = (adminMode ? supabaseAdmin : supabase)
     .from("adventures")
@@ -42,6 +48,9 @@ export async function GET(request: NextRequest) {
 
 // ── POST create adventure ────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
 
@@ -144,6 +153,9 @@ export async function POST(request: NextRequest) {
 
 // ── PUT update adventure ─────────────────────────────────────
 export async function PUT(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
     const {
@@ -248,6 +260,9 @@ export async function PUT(request: NextRequest) {
 
 // ── DELETE adventure ─────────────────────────────────────────
 export async function DELETE(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

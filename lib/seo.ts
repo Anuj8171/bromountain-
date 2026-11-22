@@ -21,6 +21,9 @@ export const SITE_DESCRIPTION =
   "Uttarkashi-based trekking and adventure company. Himalayan treks, camping and expedition experiences across Uttarakhand. Go where roads don't.";
 export const DEFAULT_IMAGE = `${SITE_URL}/og`;
 export const BUSINESS_PHONE = "+91 8171299264";
+// WhatsApp number (digits only) that receives enquiries and bookings.
+export const WHATSAPP_NUMBER =
+  process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || BUSINESS_PHONE.replace(/D/g, "");
 export const BUSINESS_EMAIL = "hello@bromountain.in";
 export const BUSINESS_CITY = "Uttarkashi";
 export const BUSINESS_STATE = "Uttarakhand";
@@ -140,20 +143,24 @@ export function getAdventuresMetadata(): Metadata {
 export function getAdventureMetadata(adventure: Adventure): Metadata {
   const title = `${adventure.title} | ${SITE_NAME}`;
   const location = adventure.location || BUSINESS_CITY;
-  const tagline = adventure.tagline || `Trek in ${location}, Uttarakhand`;
+  const tagline = (
+    adventure.tagline || `Trek in ${location}, Uttarakhand`
+  ).replace(/[.!s]+$/, "");
   const description = `${tagline}. ${adventure.duration_days} days / ${adventure.duration_nights} nights from ₹${adventure.discounted_price.toLocaleString(
     "en-IN"
   )}. Locally operated from Uttarkashi, Uttarakhand.`;
   const image = adventure.cover_image_url || DEFAULT_IMAGE;
+  const name = adventure.title.toLowerCase();
+  const isTrek = name.includes("trek");
 
   return {
     ...baseMetadata,
     title: { absolute: title },
     description,
     keywords: [
-      adventure.title.toLowerCase(),
-      `${adventure.title.toLowerCase()} trek`,
-      `${adventure.title.toLowerCase()} uttarakhand`,
+      name,
+      ...(isTrek ? [] : [`${name} trek`]),
+      `${name} uttarakhand`,
       `${location.toLowerCase()} trek`,
       `${adventure.difficulty.toLowerCase()} trek uttarakhand`,
       "uttarkashi trek",
@@ -166,15 +173,8 @@ export function getAdventureMetadata(adventure: Adventure): Metadata {
       url: `${SITE_URL}/adventures/${adventure.slug}`,
       siteName: SITE_NAME,
       locale: "en_IN",
-      type: "article",
-      images: [
-        {
-          url: image,
-          width: 1200,
-          height: 630,
-          alt: adventure.title,
-        },
-      ],
+      type: "website",
+      images: [{ url: image, alt: adventure.title }],
     },
     twitter: {
       card: "summary_large_image",

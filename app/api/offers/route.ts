@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import { revalidatePublicContent } from "@/lib/revalidate";
 
@@ -6,6 +7,11 @@ import { revalidatePublicContent } from "@/lib/revalidate";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const adminMode = searchParams.get("admin");
+
+  if (adminMode) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
+  }
 
   if (adminMode) {
     // admin gets all offers
@@ -38,6 +44,9 @@ export async function GET(request: NextRequest) {
 
 // ── POST create offer ────────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const body = await request.json();
   const { title, subtitle, badge_text, expires_at } = body;
 
@@ -76,6 +85,9 @@ export async function POST(request: NextRequest) {
 
 // ── PUT toggle offer ─────────────────────────────────────────
 export async function PUT(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const body = await request.json();
   const { id, is_active } = body;
 
@@ -108,6 +120,9 @@ export async function PUT(request: NextRequest) {
 
 // ── DELETE offer ─────────────────────────────────────────────
 export async function DELETE(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

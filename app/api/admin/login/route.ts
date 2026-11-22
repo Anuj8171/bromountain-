@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyAdminPassword, AUTH } from "@/lib/auth";
+import { verifyAdminPassword, getSessionToken, AUTH } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     // Set session cookie
     const response = NextResponse.json({ success: true });
-    response.cookies.set(AUTH.COOKIE_NAME, AUTH.COOKIE_VALUE, {
+    response.cookies.set(AUTH.COOKIE_NAME, getSessionToken()!, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

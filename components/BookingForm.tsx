@@ -1,5 +1,6 @@
 "use client";
 
+import { WHATSAPP_NUMBER } from "@/lib/seo";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -106,7 +107,7 @@ setBookingRef(ref);
       setSubmitted(true);
 
       // Open WhatsApp with pre-filled message
-      const waNumber = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || "919876543210";
+      const waNumber = WHATSAPP_NUMBER;
       const message  = buildWhatsAppMessage(data);
       window.open(`https://wa.me/${waNumber}?text=${message}`, "_blank");
 

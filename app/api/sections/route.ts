@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import { revalidatePublicContent } from "@/lib/revalidate";
 
@@ -18,6 +19,9 @@ export async function GET() {
 
 // ── POST create section ──────────────────────────────────────
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const body = await request.json();
   const { name, description, icon, status, display_order } = body;
 
@@ -50,6 +54,9 @@ export async function POST(request: NextRequest) {
 
 // ── PUT update section ───────────────────────────────────────
 export async function PUT(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const body = await request.json();
   const { id, ...updates } = body;
 
@@ -78,6 +85,9 @@ export async function PUT(request: NextRequest) {
 
 // ── DELETE section ───────────────────────────────────────────
 export async function DELETE(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

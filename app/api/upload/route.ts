@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin, BUCKET } from "@/lib/supabase";
+import { requireAdmin } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -17,6 +18,12 @@ export async function POST(request: NextRequest) {
   const validFolders = ["adventures/covers", "adventures/gallery", "sections", "reviews"];
   if (!validFolders.some((f) => folder.startsWith(f))) {
     return NextResponse.json({ error: "Invalid folder" }, { status: 400 });
+  }
+
+  // only review photos may be uploaded by the public
+  if (!folder.startsWith("reviews")) {
+    const denied = await requireAdmin();
+    if (denied) return denied;
   }
 
   // validate file type

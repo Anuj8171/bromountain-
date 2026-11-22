@@ -17,6 +17,7 @@
 //   - react-hot-toast for success/error toasts.
 "use client";
 
+import { WHATSAPP_NUMBER } from "@/lib/seo";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -84,7 +85,7 @@ export default function ContactPage({sections}: { sections: Section[] }) {
       await new Promise((r) => setTimeout(r, 1200));
 
       // open whatsapp with pre-filled message
-      const waNumber = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || "919876543210";
+      const waNumber = WHATSAPP_NUMBER;
       const message  = encodeURIComponent(
         `Hi BroMountain! 👋\n\n` +
         `*Name:* ${data.name}\n` +
