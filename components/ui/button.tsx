@@ -1,3 +1,13 @@
+// components/ui/button.tsx
+// PURPOSE: Button primitive — the primary interactive UI element.
+//   Variants: default, outline, secondary, ghost, destructive, link.
+//   Sizes: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg.
+// USED BY: Nearly every component with a button — Navbar (Book Now),
+//   HeroSection (Explore Adventures, View Reviews), AdminShell,
+//   all admin client components (save/cancel/status buttons),
+//   BookingForm, ReviewForm, ContactClient, SpecialOfferPopup, etc.
+// TECH: Built on @base-ui/react Button primitive + cva.
+//   Imports cn() from lib/utils.ts.
 "use client"
 
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
